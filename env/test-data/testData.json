@@ -1,0 +1,25 @@
+{
+  "updatedName": "Auto Name Updated",
+
+  "validUser": {
+    "username": "huong",
+    "password": "password1",
+    "originalName": "Ho Thu Huong"
+  },
+
+  "invalidUser": {
+    "username": "",
+    "password": "",
+    "originalName": ""
+  },
+
+  "product1": {
+    "name": "Áo thun nam",
+    "quantity": 1
+  },
+
+  "product2": {
+    "name": "Giày sneaker",
+    "quantity": 1
+  }
+}
