@@ -26,18 +26,14 @@ export class CheckoutPage extends BasePage {
 
         // Locators for success page
         this.successHeading = page.getByTestId('checkout-success-heading');
-        this.receiverName = page.locator('.checkout-success p strong');
-        this.receiverAddress = page.locator('.checkout-success p');
-        this.paymentMethod = page.locator('.checkout-success p strong').filter({ hasText: 'Tiền mặt khi nhận hàng' });
+        this.receiverName = page.locator('.checkout-success p').nth(1).locator('strong');
+        this.receiverAddress = page.locator('.checkout-success p').nth(2);
+        this.paymentMethod = page.locator('.checkout-success p').nth(3).locator('strong');
         this.continueShoppingButton = page.getByTestId('checkout-continue');
     }
 
     async navigate() {
         await this.goto(ENV.CHECKOUT_URL);
-    }
-
-    async verifyOnCheckoutPage() {
-        await expect(this.page).toHaveURL(ENV.CHECKOUT_URL);
     }
 
     /**
@@ -57,10 +53,19 @@ export class CheckoutPage extends BasePage {
     }
 
     /**
-     * Verifies that the success screen contains the expected information
+     * Verifies that the success screen contains the expected information: name, address, and payment method.
      */
-    async verifySuccessScreen() {
+    async verifySuccessScreen(expectedName: string, expectedAddress: string, expectedPaymentMethod: string) {
         // Wait for the success heading to be visible
         await expect(this.successHeading).toBeVisible();
+
+        // Verify receiver name
+        await expect(this.receiverName).toHaveText(expectedName);
+        
+        // Verify receiver address
+        await expect(this.receiverAddress).toHaveText(expectedAddress);
+
+        // Verify payment method
+        await expect(this.paymentMethod).toContainText(expectedPaymentMethod);
     }
 }

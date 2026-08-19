@@ -11,7 +11,6 @@ export class ProductPage extends BasePage {
         super(page);
         this.productCards = page.locator('.product-card'); 
         this.cartIcon = '.add-to-cart';
-        // Ensure this locator matches your actual cart badge DOM
         this.cartBadge = page.locator('.cart-badge'); 
     }
 
@@ -72,9 +71,5 @@ export class ProductPage extends BasePage {
 
     async getProductCount(): Promise<number> {
         return await this.productCards.count();
-    }
-
-    async verifyOnProductPage() {
-        await expect(this.page).toHaveURL(ENV.HOME_URL);
     }
 }

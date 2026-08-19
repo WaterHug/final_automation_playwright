@@ -52,13 +52,11 @@ export class CartPage extends BasePage {
 
     async increaseProductQuantity(productName: string) {
         const item = this.getCartItem(productName);
-        // Assuming the last button is "Increase" based on previous specs
         await item.locator(this.qtyBtnSelector).last().click();
     }
 
     async decreaseProductQuantity(productName: string) {
         const item = this.getCartItem(productName);
-        // Assuming the first button is "Decrease" based on previous specs
         await item.locator(this.qtyBtnSelector).first().click();
     }
 
@@ -70,10 +68,6 @@ export class CartPage extends BasePage {
     async getProductTotal(productName: string): Promise<string | null> {
         const item = this.getCartItem(productName);
         return await item.locator(this.itemTotalSelector).textContent();
-    }
-
-    async verifyOnCartPage() {
-        await expect(this.page).toHaveURL(ENV.CART_URL);
     }
 
     async getCartItemCount(): Promise<number> {
@@ -90,5 +84,14 @@ export class CartPage extends BasePage {
 
     async getCartTotal(): Promise<string | null> {
         return await this.totalAmount.textContent();
+    }
+
+    /**
+     * Waits for the page to reach a specific load state.
+     * Useful after DOM manipulations like removing items.
+     * @param state 'load' | 'domcontentloaded' | 'networkidle'
+     */
+    async waitForPageLoadState(state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded') {
+        await this.page.waitForLoadState(state);
     }
 }

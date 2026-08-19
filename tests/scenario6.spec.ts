@@ -6,8 +6,8 @@ import testData from '@env/test-data/testData.json'; // FIX: Use path alias for 
 test.describe('Scenario 6: Update Full Name in profile, then clean up via API', () => {
 
     let userToken = '';
-    let initialNameFromAPI: string; // To store the name fetched from API
-    const updatedName = testData.updatedName; // Use updatedName from testData.json
+    let initialNameFromAPI: string;
+    const updatedName = testData.updatedName;
 
     test.beforeEach(async ({ loggedInUser, request }) => {
         userToken = loggedInUser;

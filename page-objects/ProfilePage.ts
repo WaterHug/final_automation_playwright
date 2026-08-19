@@ -23,7 +23,6 @@ export class ProfilePage extends BasePage {
 
     async getProfileName(): Promise<string | null> {
         return await this.profileName.inputValue().catch(async () => {
-             // Fallback to textContent just in case it's not an input type
              return await this.profileName.textContent();
         });
     }

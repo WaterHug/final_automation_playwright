@@ -24,23 +24,23 @@ test.describe('Scenario 5: Checkout Flow', () => {
     // Iterate over the checkoutData array to create individual test cases
     for (const data of checkoutData) {
         test(`Checkout succeeds with ${data.description}`, async ({ productPage, cartPage, checkoutPage }) => {
-            const { customerName, customerPhone, customerAddress } = data;
+            const { customerName, customerPhone, customerAddress, paymentMethod } = data; // Destructure paymentMethod
 
             // 1. Add Product to Cart
-            Logger.info(`Adding "${targetProduct}" to the cart`);
             await productPage.navigate();
             await productPage.addProductToCart(targetProduct);
+            Logger.info(`Added "${targetProduct}" to the cart`);
 
             // 2. Navigate to Cart & Proceed to Checkout
-            Logger.info('Navigating to the Cart Page');
+            Logger.info('Go to the Cart Page');
             await cartPage.navigate();
             
             Logger.info('Proceeding to Checkout');
             await cartPage.proceedToCheckout();
 
             // 3. Fill Checkout Form
-            Logger.info('Filling out checkout form with valid info');
             await checkoutPage.fillCheckoutForm(customerName, customerPhone, customerAddress);
+            Logger.info('Filled out checkout form with valid info');
 
             // 4. Submit Order (COD is assumed default/implied by your paymentMethod locator)
             Logger.info('Submitting order (COD)');
@@ -48,9 +48,7 @@ test.describe('Scenario 5: Checkout Flow', () => {
 
             // 5. Verify Success Screen
             Logger.info('Verifying checkout success screen details');
-            await checkoutPage.verifySuccessScreen();
-
-            Logger.info('Scenario 5 completed successfully');
+            await checkoutPage.verifySuccessScreen(customerName, customerAddress, paymentMethod);
         });
     }
 });

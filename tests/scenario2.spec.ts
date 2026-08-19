@@ -8,16 +8,18 @@ test.describe('Scenario 2: Single Product Cart Flow', () => {
     const targetProduct = testData.product1.name;
     let userToken = ''; 
 
-    test.beforeEach(async ({ loggedInUser }) => {
-        // The loggedInUser fixture now handles login AND returns the token!
+    test.beforeEach(async ({ loggedInUser, request }) => {
         userToken = loggedInUser;
         Logger.info('User is logged in via fixture');
+
+        await cleanupTestData(request, userToken);
+        Logger.info('Cleaning up cart before test via API...');
     });
 
     test.afterEach(async ({ request }) => {
         if (userToken) {
-            Logger.info('Cleaning up: Removing product from cart via API');
             await cleanupTestData(request, userToken);
+            Logger.info('Cleaning up: Removing product from cart via API');
         } else {
             Logger.error('Skipping API cleanup because userToken is empty.');
         }
@@ -25,22 +27,25 @@ test.describe('Scenario 2: Single Product Cart Flow', () => {
 
     test('Add a single product to cart — verify quantity & cart page', async ({ productPage, cartPage }) => {
         // 1. Add Product to Cart
-        Logger.info(`Adding "${targetProduct}" to the cart`);
         await productPage.navigate();
         await productPage.addProductAndVerifyBadge(targetProduct);
+        Logger.info(`Added "${targetProduct}" to the cart`);
 
         // 2. Navigate to Cart
-        Logger.info('Navigating to the Cart Page');
         await cartPage.navigate();
+        Logger.info('Go to Cart Page');
 
         // 3. Verify the Cart Items & Quantity
-        Logger.info('Verifying cart item details');
         const itemCount = await cartPage.getCartItemCount();
-        expect(itemCount).toBe(1); 
+        expect(itemCount).toBe(1);
+
+        // Verify the product name is present in the cart
+        await expect(cartPage.getCartItem(targetProduct)).toBeVisible();
+        Logger.info(`Verified product "${targetProduct}" is visible in the cart.`);
 
         const quantity = await cartPage.getProductQuantity(targetProduct);
         expect(quantity?.trim()).toBe('1');
         
-        Logger.info('Scenario 2 completed successfully');
+        Logger.info(`Found "${quantity}" of "${targetProduct}" in the cart`);
     });
 });

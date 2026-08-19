@@ -5,7 +5,7 @@ import testData from '@env/test-data/testData.json';
 test.describe('Login Tests', () => {
     // We now destructure `loginPage` directly from the fixture
     test('Login successfully', async ({ loginPage }) => {
-        Logger.info('Navigating to login page');
+        Logger.info('Go to login page');
         await loginPage.navigate();
         
         Logger.info('Attempting login');
@@ -16,7 +16,7 @@ test.describe('Login Tests', () => {
     });
 
     test('Login failed with blank username and password', async ({ loginPage }) => {
-        Logger.info('Navigating to login page');
+        Logger.info('Go to login page');
         await loginPage.navigate();
         
         Logger.info('Attempting login with invalid credentials');
