@@ -15,13 +15,24 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 20 # Use a recent LTS Node.js version
+    
     - name: Install dependencies
       run: npm ci
     - name: Install Playwright browsers
       run: npx playwright install --with-deps
     - name: Run Playwright tests
       run: npx playwright test
-    - name: Generate Allure report
+    
+    # Ensure report directories exist for artifact uploads, even if tests fail to create them
+    - name: Create empty report directories if not exist
+      if: always() # Run this even if tests failed
+      run: |
+        mkdir -p allure-results # Allure input directory
+        mkdir -p allure-report # Allure output directory
+        mkdir -p playwright-report # Playwright HTML report directory
+        mkdir -p test-results # Playwright test results directory
+
+    - name: Generate Allure Report
       if: always() # Always run this step, even if tests fail
       run: npx allure-commandline generate allure-results --clean -o allure-report
     - name: Upload Allure Report
